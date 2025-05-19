@@ -15,7 +15,6 @@ func InitLoggerProvider(o LoggerOption) (*log.LoggerProvider, error) {
 	ctx := context.Background()
 	exporter, err := otlploghttp.New(ctx,
 		otlploghttp.WithEndpoint(o.OtlpEndpoint),
-		otlploghttp.WithInsecure(),
 	)
 	if err != nil {
 		return nil, err
