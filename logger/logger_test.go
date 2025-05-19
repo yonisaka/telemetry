@@ -9,7 +9,7 @@ import (
 
 func TestLogger(t *testing.T) {
 	loggerOpt := LoggerOption{
-		OtlpEndpoint: "log.otl.signoz.sembuh.ai",
+		OtlpEndpoint: "127.0.0.1:4318",
 		Environment:  "development",
 	}
 
