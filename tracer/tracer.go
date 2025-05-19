@@ -36,12 +36,21 @@ func InitTracer(o TracerOption) (*sdktrace.TracerProvider, error) {
 		return nil, err
 	}
 
+	// Set up the resource attributes
+	resourceAttributes := resource.NewWithAttributes(
+		semconv.SchemaURL,
+		semconv.ServiceNameKey.String(o.ServiceName),
+		semconv.DeploymentEnvironmentKey.String(o.Environment),
+		semconv.TelemetrySDKLanguageGo,
+		semconv.TelemetrySDKVersionKey.String("0.1.0"),
+	)
+
 	// For the demonstration, use sdktrace.AlwaysSample sampler to sample all traces.
 	// In a production application, use sdktrace.ProbabilitySampler with a desired probability.
 	traceProvider := sdktrace.NewTracerProvider(
 		sdktrace.WithSampler(sdktrace.AlwaysSample()),
 		sdktrace.WithSpanProcessor(sdktrace.NewBatchSpanProcessor(exporter)),
-		sdktrace.WithResource(resource.NewWithAttributes(semconv.SchemaURL, semconv.ServiceNameKey.String(o.ServiceName))),
+		sdktrace.WithResource(resourceAttributes),
 	)
 
 	otel.SetTracerProvider(traceProvider)
