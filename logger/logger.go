@@ -24,8 +24,8 @@ func InitLoggerProvider(o LoggerOption) (*log.LoggerProvider, error) {
 	// Set up the resource attributes
 	resourceAttributes := resource.NewWithAttributes(
 		semconv.SchemaURL,
-		semconv.ServiceNameKey.String("test-service"),
-		semconv.DeploymentEnvironmentKey.String("development"),
+		semconv.ServiceNameKey.String(o.ServiceName),
+		semconv.DeploymentEnvironmentKey.String(o.Environment),
 		semconv.TelemetrySDKLanguageGo,
 		semconv.TelemetrySDKVersionKey.String("0.1.0"),
 	)

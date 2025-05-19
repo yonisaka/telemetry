@@ -10,6 +10,7 @@ import (
 func TestLogger(t *testing.T) {
 	loggerOpt := LoggerOption{
 		OtlpEndpoint: "127.0.0.1:4318",
+		Environment:  "development",
 	}
 
 	lp, err := InitLoggerProvider(loggerOpt)

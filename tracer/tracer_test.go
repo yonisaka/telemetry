@@ -12,6 +12,7 @@ func TestTracer(t *testing.T) {
 		CollectorURL: "127.0.0.1:4317",
 		InsecureMode: true,
 		ServiceName:  "test-app",
+		Environment:  "development",
 	}
 	tp, err := InitTracer(tracerOpt)
 	assert.NoError(t, err)
