@@ -5,12 +5,11 @@ import (
 	"context"
 	"go.opentelemetry.io/otel"
 	"go.opentelemetry.io/otel/exporters/otlp/otlptrace"
-	"go.opentelemetry.io/otel/exporters/otlp/otlptrace/otlptracegrpc"
+	"go.opentelemetry.io/otel/exporters/otlp/otlptrace/otlptracehttp"
 	"go.opentelemetry.io/otel/propagation"
 	"go.opentelemetry.io/otel/sdk/resource"
 	sdktrace "go.opentelemetry.io/otel/sdk/trace"
 	semconv "go.opentelemetry.io/otel/semconv/v1.4.0"
-	"google.golang.org/grpc/credentials"
 )
 
 // InitTracer configures an OpenTelemetry exporter and trace provider
@@ -19,18 +18,26 @@ func InitTracer(o TracerOption) (*sdktrace.TracerProvider, error) {
 		"signoz-access-token": o.SignozToken,
 	}
 
-	secureOption := otlptracegrpc.WithTLSCredentials(credentials.NewClientTLSFromCert(nil, "")) // config can be passed to configure TLS
-	if o.InsecureMode {
-		secureOption = otlptracegrpc.WithInsecure()
-	}
+	//secureOption := otlptracegrpc.WithTLSCredentials(credentials.NewClientTLSFromCert(nil, "")) // config can be passed to configure TLS
+	//if o.InsecureMode {
+	//	secureOption = otlptracegrpc.WithInsecure()
+	//}
 
+	otlptracehttp.NewClient(
+		otlptracehttp.WithEndpoint(o.CollectorURL),
+		otlptracehttp.WithHeaders(headers),
+	)
 	exporter, err := otlptrace.New(
 		context.Background(),
-		otlptracegrpc.NewClient(
-			secureOption,
-			otlptracegrpc.WithEndpoint(o.CollectorURL),
-			otlptracegrpc.WithHeaders(headers),
+		otlptracehttp.NewClient(
+			otlptracehttp.WithEndpoint(o.CollectorURL),
+			otlptracehttp.WithHeaders(headers),
 		),
+		//otlptracegrpc.NewClient(
+		//	secureOption,
+		//	otlptracegrpc.WithEndpoint(o.CollectorURL),
+		//	otlptracegrpc.WithHeaders(headers),
+		//),
 	)
 	if err != nil {
 		return nil, err

@@ -9,7 +9,7 @@ import (
 
 func TestTracer(t *testing.T) {
 	tracerOpt := TracerOption{
-		CollectorURL: "127.0.0.1:4317",
+		CollectorURL: "127.0.0.1:4318",
 		InsecureMode: false,
 		ServiceName:  "test-app",
 		Environment:  "development",
